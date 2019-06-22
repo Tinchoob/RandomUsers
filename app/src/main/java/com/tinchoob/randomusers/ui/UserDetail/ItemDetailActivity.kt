@@ -5,9 +5,14 @@ import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
+import com.bumptech.glide.Glide
 import com.tinchoob.randomusers.R
 import com.tinchoob.randomusers.ui.Home.ItemListActivity
 import kotlinx.android.synthetic.main.activity_item_detail.*
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
+import com.bumptech.glide.request.RequestOptions
+
+
 
 /**
  * An activity representing a single Item detail screen. This
@@ -51,10 +56,22 @@ class ItemDetailActivity : AppCompatActivity() {
                 }
             }
 
+            val options = RequestOptions()
+            options.fitCenter()
+
+            Glide.with(this)
+                .load(intent.getStringExtra(ItemDetailFragment.USER_IMAGE))
+                .apply(options)
+                .into(user_image)
+
+
+            supportActionBar?.title = intent.getStringExtra(ItemDetailFragment.ARG_ITEM_ID)
+
             supportFragmentManager.beginTransaction()
                 .add(R.id.item_detail_container, fragment)
                 .commit()
         }
+
 
     }
 
@@ -67,7 +84,7 @@ class ItemDetailActivity : AppCompatActivity() {
                 //
                 // http://developer.android.com/design/patterns/navigation.html#up-vs-back
 
-                navigateUpTo(Intent(this, ItemListActivity::class.java))
+               finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)

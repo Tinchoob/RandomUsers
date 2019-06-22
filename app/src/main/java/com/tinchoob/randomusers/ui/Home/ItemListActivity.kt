@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.tinchoob.randomusers.R
+import com.tinchoob.randomusers.data.RandomUsersRepository
 import com.tinchoob.randomusers.data.model.User
 
-import com.tinchoob.randomusers.dummy.DummyContent
 import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list.*
 
@@ -33,7 +33,7 @@ class ItemListActivity : AppCompatActivity(), UserListContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_list)
 
-        presenter = UserListPresenter(this)
+        presenter = UserListPresenter(this, RandomUsersRepository())
 
         setSupportActionBar(toolbar)
         toolbar.title = title

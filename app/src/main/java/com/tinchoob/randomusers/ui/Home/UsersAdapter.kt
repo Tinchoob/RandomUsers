@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.tinchoob.randomusers.R
 import com.tinchoob.randomusers.data.model.Result
-import com.tinchoob.randomusers.dummy.DummyContent
 import com.tinchoob.randomusers.ui.UserDetail.ItemDetailActivity
 import com.tinchoob.randomusers.ui.UserDetail.ItemDetailFragment
 import kotlinx.android.synthetic.main.item_list_content.view.*
@@ -25,11 +24,11 @@ class UsersAdapter(
 
     init {
         onClickListener = View.OnClickListener { v ->
-            val item = v.tag as DummyContent.DummyItem
+            val item = v.tag as Result
             if (twoPane) {
                 val fragment = ItemDetailFragment().apply {
                     arguments = Bundle().apply {
-                        putString(ItemDetailFragment.ARG_ITEM_ID, item.id)
+                        putString(ItemDetailFragment.ARG_ITEM_ID, item.name?.first)
                     }
                 }
                 parentActivity.supportFragmentManager
@@ -38,7 +37,8 @@ class UsersAdapter(
                     .commit()
             } else {
                 val intent = Intent(v.context, ItemDetailActivity::class.java).apply {
-                    putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id)
+                    putExtra(ItemDetailFragment.ARG_ITEM_ID, item.name?.first)
+                    putExtra(ItemDetailFragment.USER_IMAGE,item.picture?.large)
                 }
                 v.context.startActivity(intent)
             }

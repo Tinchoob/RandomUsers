@@ -6,6 +6,7 @@
 
     <TextView
             android:id="@+id/id_text"
+            android:text="dsadasdasdasd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
@@ -13,8 +14,12 @@
 
     <TextView
             android:id="@+id/content"
+            android:text="dsadasdasdasd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:textAppearance="?attr/textAppearanceListItem"/>
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
+
+    </LinearLayout>
 </LinearLayout>

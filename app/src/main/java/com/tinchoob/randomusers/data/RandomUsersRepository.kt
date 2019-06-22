@@ -1,27 +1,28 @@
-package com.tinchoob.randomusers.data.remote
+package com.tinchoob.randomusers.data
 
-import android.util.Log
+import com.tinchoob.randomusers.data.remote.RandomUsersApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
-open class RandomUsersClienteService{
+open class RandomUsersRepository : UsersDataSource{
 
-    var service = RandomUsersApiService.create()
+    private val service = RandomUsersApiService.create()
 
-    fun getUsers (){
+
+    override fun getUsers(callback: UsersDataSource.GetUsersCallback) {
         GlobalScope.launch(Dispatchers.Main) {
             val request = service.getUsers(50)
             try {
                 val response = request.await()
-                Log.d("lala",response.toString())
+                callback.onUsersLoaded(response)
             } catch (e: HttpException) {
-                e.stackTrace
+               callback.onFailure()
             } catch (e: Throwable) {
-                e.stackTrace
+               callback.onFailure()
             }
         }
-
     }
+
 }
