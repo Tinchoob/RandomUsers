@@ -53,6 +53,7 @@ class ItemDetailActivity : AppCompatActivity() {
                         ItemDetailFragment.ARG_ITEM_ID,
                         intent.getStringExtra(ItemDetailFragment.ARG_ITEM_ID)
                     )
+                    putString(ItemDetailFragment.USER_EMAIL,intent.getStringExtra(ItemDetailFragment.USER_EMAIL))
                 }
             }
 

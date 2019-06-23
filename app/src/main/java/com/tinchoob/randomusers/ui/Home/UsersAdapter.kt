@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.tinchoob.randomusers.R
 import com.tinchoob.randomusers.data.model.Result
 import com.tinchoob.randomusers.ui.UserDetail.ItemDetailActivity
 import com.tinchoob.randomusers.ui.UserDetail.ItemDetailFragment
+import kotlinx.android.synthetic.main.activity_item_detail.*
 import kotlinx.android.synthetic.main.item_list_content.view.*
 
 
@@ -37,8 +40,9 @@ class UsersAdapter(
                     .commit()
             } else {
                 val intent = Intent(v.context, ItemDetailActivity::class.java).apply {
-                    putExtra(ItemDetailFragment.ARG_ITEM_ID, item.name?.first)
+                    putExtra(ItemDetailFragment.ARG_ITEM_ID, String.format("%s %s",item.name?.last,item.name?.first))
                     putExtra(ItemDetailFragment.USER_IMAGE,item.picture?.large)
+                    putExtra(ItemDetailFragment.USER_EMAIL,item.email)
                 }
                 v.context.startActivity(intent)
             }
@@ -53,8 +57,12 @@ class UsersAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values!![position]
-        holder.idView.text = item.name?.first
+        holder.idView.text = position.toString()
         holder.contentView.text = item.name?.last
+
+        Glide.with(parentActivity)
+            .load(item.picture?.thumbnail)
+            .into(holder.userThumbnail)
 
         with(holder.itemView) {
             tag = item
@@ -67,5 +75,6 @@ class UsersAdapter(
     inner class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         val idView: TextView = view.id_text
         val contentView: TextView = view.content
+        val userThumbnail : ImageView = view.user_thumbnail
     }
 }
