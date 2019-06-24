@@ -17,18 +17,17 @@ import com.tinchoob.randomusers.utils.Constants.Companion.USER_USERNAME
 
 import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
-/**
- * An activity representing a list of Pings. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a [ItemDetailActivity] representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- */
-class ItemListActivity : AppCompatActivity(), UserListContract.View,OnUserSelectedListener {
 
-    override fun onUserSelected(item: Result){
+class ItemListActivity : AppCompatActivity(), UserListContract.View, OnUserSelectedListener {
+
+    private lateinit var mLayoutManager: LinearLayoutManager
+    private lateinit var mAdapter: UsersAdapter
+    private var loading: Boolean = false
+
+    override fun onUserSelected(item: Result) {
         if (twoPane) {
             val fragment = ItemDetailFragment().apply {
                 arguments = Bundle().apply {
@@ -41,10 +40,10 @@ class ItemListActivity : AppCompatActivity(), UserListContract.View,OnUserSelect
                 .commit()
         } else {
             val intent = Intent(this, ItemDetailActivity::class.java).apply {
-                putExtra(USER_FULL_NAME, String.format("%s %s",item.name?.last,item.name?.first))
-                putExtra(USER_IMAGE,item.picture?.large)
-                putExtra(USER_EMAIL,item.email)
-                putExtra(USER_USERNAME,item.login?.username)
+                putExtra(USER_FULL_NAME, String.format("%s %s", item.name?.last, item.name?.first))
+                putExtra(USER_IMAGE, item.picture?.large)
+                putExtra(USER_EMAIL, item.email)
+                putExtra(USER_USERNAME, item.login?.username)
             }
             startActivity(intent)
         }
@@ -64,15 +63,12 @@ class ItemListActivity : AppCompatActivity(), UserListContract.View,OnUserSelect
         setContentView(R.layout.activity_item_list)
 
         presenter = UserListPresenter(this, RandomUsersRepository())
+        mLayoutManager = LinearLayoutManager(this)
 
         setSupportActionBar(toolbar)
         toolbar.title = title
 
         if (item_detail_container != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
             twoPane = true
         }
 
@@ -83,20 +79,49 @@ class ItemListActivity : AppCompatActivity(), UserListContract.View,OnUserSelect
 
     override fun setUsers(user: User) {
 
-        setupRecyclerView(item_list,user)
+        setupRecyclerView(item_list, user)
     }
 
-    private fun setupRecyclerView(recyclerView: androidx.recyclerview.widget.RecyclerView,user : User) {
-        recyclerView.adapter = UsersAdapter(
+    private fun setupRecyclerView(recyclerView: RecyclerView, user: User) {
+        mAdapter = UsersAdapter(
             this,
             user.results,
             twoPane,
             this
         )
+        recyclerView.adapter = mAdapter
+        recyclerView.layoutManager = mLayoutManager
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0)
+                //check for scroll down
+                {
+                    val shouldLoadMoreUsers =
+                        mLayoutManager.itemCount <= mLayoutManager.findLastVisibleItemPosition() + 2
+
+                    if (!loading && shouldLoadMoreUsers) {
+                        loading = true
+                        presenter.fetchNewUsers()
+                    }
+                }
+            }
+        })
     }
 
+
     override fun showError() {
-        Toast.makeText(this,R.string.general_error_message,Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.general_error_message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showErrorFetchingUsers() {
+        loading = false
+        Toast.makeText(this, R.string.general_error_message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun newUsersReceived(user: User) {
+        loading = false
+        mAdapter.addMoreUsers(user.results!!)
     }
 
 

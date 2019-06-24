@@ -29,4 +29,16 @@ class UserListPresenter(val userListView: UserListContract.View, private val ran
     override fun start() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override fun fetchNewUsers() {
+        randomUsersRepository.getMoreUsers(object : UsersDataSource.GetUsersCallback{
+            override fun onUsersLoaded(user: User) {
+                userListView.newUsersReceived(user)
+            }
+
+            override fun onFailure() {
+                userListView.showError()
+            }
+        })
+    }
 }

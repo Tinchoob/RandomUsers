@@ -26,9 +26,6 @@ class ItemDetailFragment : Fragment(),UserDetailContract.View {
 
         arguments?.let {
             if (it.containsKey(USER_FULL_NAME)) {
-                // Load the dummy content specified by the fragment
-                // arguments. In a real-world scenario, use a Loader
-                // to load content from a content provider.
                 fullName = it.getString(USER_FULL_NAME)
                 userEmail = it.getString(USER_EMAIL)
                 userName = it.getString(USER_USERNAME)

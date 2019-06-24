@@ -14,5 +14,7 @@ interface UsersDataSource {
 
     fun getUsers(callback: GetUsersCallback)
 
+    fun getMoreUsers(callback: GetUsersCallback)
+
 
 }

@@ -13,19 +13,12 @@ import kotlinx.android.synthetic.main.item_list_content.view.*
 
 class UsersAdapter(
     private val parentActivity: ItemListActivity,
-    private val values: List<Result>?,
+    private var values: MutableList<Result>?,
     private val twoPane: Boolean,
     private val userSelectedListener : OnUserSelectedListener
 ) :
     androidx.recyclerview.widget.RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
 
-//    private val onClickListener: View.OnClickListener
-//
-//    init {
-//        onClickListener = View.OnClickListener { v ->
-//
-//        }
-//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -49,6 +42,11 @@ class UsersAdapter(
             tag = item
         }
 
+    }
+
+    fun addMoreUsers(newValues: MutableList<Result>){
+    values?.addAll(newValues)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = values!!.size

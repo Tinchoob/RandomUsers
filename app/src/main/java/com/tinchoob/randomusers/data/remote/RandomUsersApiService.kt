@@ -14,6 +14,9 @@ interface RandomUsersApiService {
     @GET(".")
     fun getUsers(@Query("results") usersCount: Int ) : Deferred<User>
 
+    @GET(".")
+    fun getNewUsers(@Query("page") page: Int ,@Query("results") usersCount: Int,@Query("seed") seed: String? ) : Deferred<User>
+
 
     companion object {
         fun create(): RandomUsersApiService {

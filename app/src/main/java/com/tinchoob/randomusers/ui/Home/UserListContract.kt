@@ -9,10 +9,13 @@ interface UserListContract {
     interface View : BaseView<Presenter> {
         fun setUsers(user : User)
         fun showError()
+        fun newUsersReceived(user: User)
+        fun showErrorFetchingUsers()
     }
 
     interface Presenter : BasePresenter {
         fun getUsers()
+        fun fetchNewUsers()
     }
 
 }
