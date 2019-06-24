@@ -19,39 +19,26 @@ import kotlinx.android.synthetic.main.item_list_content.view.*
 class UsersAdapter(
     private val parentActivity: ItemListActivity,
     private val values: List<Result>?,
-    private val twoPane: Boolean
+    private val twoPane: Boolean,
+    private val userSelectedListener : OnUserSelectedListener
 ) :
     androidx.recyclerview.widget.RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
 
-    private val onClickListener: View.OnClickListener
-
-    init {
-        onClickListener = View.OnClickListener { v ->
-            val item = v.tag as Result
-            if (twoPane) {
-                val fragment = ItemDetailFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ItemDetailFragment.ARG_ITEM_ID, item.name?.first)
-                    }
-                }
-                parentActivity.supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.item_detail_container, fragment)
-                    .commit()
-            } else {
-                val intent = Intent(v.context, ItemDetailActivity::class.java).apply {
-                    putExtra(ItemDetailFragment.ARG_ITEM_ID, String.format("%s %s",item.name?.last,item.name?.first))
-                    putExtra(ItemDetailFragment.USER_IMAGE,item.picture?.large)
-                    putExtra(ItemDetailFragment.USER_EMAIL,item.email)
-                }
-                v.context.startActivity(intent)
-            }
-        }
-    }
+//    private val onClickListener: View.OnClickListener
+//
+//    init {
+//        onClickListener = View.OnClickListener { v ->
+//
+//        }
+//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_list_content, parent, false)
+
+        view.setOnClickListener {
+                userSelectedListener.OnUserSelected(view.tag as Result)
+        }
         return ViewHolder(view)
     }
 
@@ -66,8 +53,8 @@ class UsersAdapter(
 
         with(holder.itemView) {
             tag = item
-            setOnClickListener(onClickListener)
         }
+
     }
 
     override fun getItemCount() = values!!.size

@@ -1,6 +1,5 @@
 package com.tinchoob.randomusers.ui.UserDetail
 
-import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +8,6 @@ import com.bumptech.glide.Glide
 import com.tinchoob.randomusers.R
 import com.tinchoob.randomusers.ui.Home.ItemListActivity
 import kotlinx.android.synthetic.main.activity_item_detail.*
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
 import com.bumptech.glide.request.RequestOptions
 
 
@@ -50,10 +48,11 @@ class ItemDetailActivity : AppCompatActivity() {
             val fragment = ItemDetailFragment().apply {
                 arguments = Bundle().apply {
                     putString(
-                        ItemDetailFragment.ARG_ITEM_ID,
-                        intent.getStringExtra(ItemDetailFragment.ARG_ITEM_ID)
+                        ItemDetailFragment.USER_FULL_NAME,
+                        intent.getStringExtra(ItemDetailFragment.USER_FULL_NAME)
                     )
                     putString(ItemDetailFragment.USER_EMAIL,intent.getStringExtra(ItemDetailFragment.USER_EMAIL))
+                    putString(ItemDetailFragment.USER_USERNAME,intent.getStringExtra(ItemDetailFragment.USER_USERNAME))
                 }
             }
 
@@ -66,7 +65,7 @@ class ItemDetailActivity : AppCompatActivity() {
                 .into(user_image)
 
 
-            supportActionBar?.title = intent.getStringExtra(ItemDetailFragment.ARG_ITEM_ID)
+            supportActionBar?.setDisplayShowTitleEnabled(false)
 
             supportFragmentManager.beginTransaction()
                 .add(R.id.item_detail_container, fragment)

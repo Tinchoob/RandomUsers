@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.tinchoob.randomusers.R
-import kotlinx.android.synthetic.main.activity_item_detail.*
 import kotlinx.android.synthetic.main.item_detail.view.*
 
 /**
@@ -15,21 +14,26 @@ import kotlinx.android.synthetic.main.item_detail.view.*
  * in two-pane mode (on tablets) or a [ItemDetailActivity]
  * on handsets.
  */
-class ItemDetailFragment : Fragment() {
+class ItemDetailFragment : Fragment(),UserDetailContract.View {
 
+    override lateinit var presenter: UserDetailContract.Presenter
     lateinit var userName : String
+    lateinit var fullName : String
     lateinit var userEmail : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        presenter = UserDetailPresenter(this)
+
         arguments?.let {
-            if (it.containsKey(ARG_ITEM_ID)) {
+            if (it.containsKey(USER_FULL_NAME)) {
                 // Load the dummy content specified by the fragment
                 // arguments. In a real-world scenario, use a Loader
                 // to load content from a content provider.
-                userName = it.getString(ARG_ITEM_ID)
+                fullName = it.getString(USER_FULL_NAME)
                 userEmail = it.getString(USER_EMAIL)
+                userName = it.getString(USER_USERNAME)
             }
         }
     }
@@ -40,8 +44,9 @@ class ItemDetailFragment : Fragment() {
     ): View? {
         val rootView = inflater.inflate(R.layout.item_detail, container, false)
 
-        rootView.item_detail.text = userName
+        rootView.user_name.text = fullName
         rootView.user_email.text = userEmail
+        rootView.user_username.text = userName
 
         return rootView
     }
@@ -52,7 +57,8 @@ class ItemDetailFragment : Fragment() {
          * represents.
          */
         const val USER_EMAIL = "user_email"
-        const val ARG_ITEM_ID = "item_id"
+        const val USER_FULL_NAME = "user_full_name"
+        const val USER_USERNAME = "user_username"
         const val USER_IMAGE = "image_path"
     }
 }

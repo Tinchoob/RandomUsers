@@ -1,11 +1,14 @@
 package com.tinchoob.randomusers.ui.Home
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
 import com.tinchoob.randomusers.R
 import com.tinchoob.randomusers.data.RandomUsersRepository
+import com.tinchoob.randomusers.data.model.Result
 import com.tinchoob.randomusers.data.model.User
+import com.tinchoob.randomusers.ui.UserDetail.ItemDetailActivity
+import com.tinchoob.randomusers.ui.UserDetail.ItemDetailFragment
 
 import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list.*
@@ -18,7 +21,29 @@ import kotlinx.android.synthetic.main.item_list.*
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-class ItemListActivity : AppCompatActivity(), UserListContract.View {
+class ItemListActivity : AppCompatActivity(), UserListContract.View,OnUserSelectedListener {
+
+    override fun OnUserSelected(item: Result){
+        if (twoPane) {
+            val fragment = ItemDetailFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ItemDetailFragment.USER_FULL_NAME, item.name?.first)
+                }
+            }
+            this.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.item_detail_container, fragment)
+                .commit()
+        } else {
+            val intent = Intent(this, ItemDetailActivity::class.java).apply {
+                putExtra(ItemDetailFragment.USER_FULL_NAME, String.format("%s %s",item.name?.last,item.name?.first))
+                putExtra(ItemDetailFragment.USER_IMAGE,item.picture?.large)
+                putExtra(ItemDetailFragment.USER_EMAIL,item.email)
+                putExtra(ItemDetailFragment.USER_USERNAME,item.login?.username)
+            }
+            startActivity(intent)
+        }
+    }
 
 
     override lateinit var presenter: UserListContract.Presenter
@@ -60,7 +85,8 @@ class ItemListActivity : AppCompatActivity(), UserListContract.View {
         recyclerView.adapter = UsersAdapter(
             this,
             user.results,
-            twoPane
+            twoPane,
+            this
         )
     }
 
