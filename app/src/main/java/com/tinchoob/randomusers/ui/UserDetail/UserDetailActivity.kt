@@ -14,25 +14,19 @@ import com.tinchoob.randomusers.utils.Constants.Companion.USER_IMAGE
 import com.tinchoob.randomusers.utils.Constants.Companion.USER_USERNAME
 
 
-class ItemDetailActivity : AppCompatActivity() {
+class UserDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item_detail)
         setSupportActionBar(detail_toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
-
         // Show the Up button in the action bar.
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
         if (savedInstanceState == null) {
 
-            val fragment = ItemDetailFragment().apply {
+            val fragment = UserDetailFragment().apply {
                 arguments = Bundle().apply {
                     putString(
                         USER_FULL_NAME,

@@ -12,7 +12,7 @@ import com.tinchoob.randomusers.utils.Constants.Companion.USER_USERNAME
 import kotlinx.android.synthetic.main.item_detail.view.*
 
 
-class ItemDetailFragment : Fragment(),UserDetailContract.View {
+class UserDetailFragment : Fragment(),UserDetailContract.View {
 
     override lateinit var presenter: UserDetailContract.Presenter
     private lateinit var userName : String

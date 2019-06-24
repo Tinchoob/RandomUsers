@@ -8,8 +8,8 @@ import com.tinchoob.randomusers.R
 import com.tinchoob.randomusers.data.RandomUsersRepository
 import com.tinchoob.randomusers.data.model.Result
 import com.tinchoob.randomusers.data.model.User
-import com.tinchoob.randomusers.ui.UserDetail.ItemDetailActivity
-import com.tinchoob.randomusers.ui.UserDetail.ItemDetailFragment
+import com.tinchoob.randomusers.ui.UserDetail.UserDetailActivity
+import com.tinchoob.randomusers.ui.UserDetail.UserDetailFragment
 import com.tinchoob.randomusers.utils.Constants.Companion.USER_EMAIL
 import com.tinchoob.randomusers.utils.Constants.Companion.USER_FULL_NAME
 import com.tinchoob.randomusers.utils.Constants.Companion.USER_IMAGE
@@ -22,15 +22,17 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 
-class ItemListActivity : AppCompatActivity(), UserListContract.View, OnUserSelectedListener {
+class UserListActivity : AppCompatActivity(), UserListContract.View, OnUserSelectedListener {
 
     private lateinit var mLayoutManager: LinearLayoutManager
     private lateinit var mAdapter: UsersAdapter
+    override lateinit var presenter: UserListContract.Presenter
+    private var twoPane: Boolean = false
     private var loading: Boolean = false
 
     override fun onUserSelected(item: Result) {
         if (twoPane) {
-            val fragment = ItemDetailFragment().apply {
+            val fragment = UserDetailFragment().apply {
                 arguments = Bundle().apply {
                     putString(USER_FULL_NAME, item.name?.first)
                 }
@@ -40,7 +42,7 @@ class ItemListActivity : AppCompatActivity(), UserListContract.View, OnUserSelec
                 .replace(R.id.item_detail_container, fragment)
                 .commit()
         } else {
-            val intent = Intent(this, ItemDetailActivity::class.java).apply {
+            val intent = Intent(this, UserDetailActivity::class.java).apply {
                 putExtra(USER_FULL_NAME, String.format("%s %s", item.name?.last, item.name?.first))
                 putExtra(USER_IMAGE, item.picture?.large)
                 putExtra(USER_EMAIL, item.email)
@@ -50,14 +52,6 @@ class ItemListActivity : AppCompatActivity(), UserListContract.View, OnUserSelec
         }
     }
 
-
-    override lateinit var presenter: UserListContract.Presenter
-
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
-    private var twoPane: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +77,7 @@ class ItemListActivity : AppCompatActivity(), UserListContract.View, OnUserSelec
         setupRecyclerView(item_list, user)
     }
 
-    private fun setupRecyclerView(recyclerView: RecyclerView, user: User) {
+    override fun setupRecyclerView(recyclerView: RecyclerView, user: User) {
         mAdapter = UsersAdapter(
             this,
             user.results,

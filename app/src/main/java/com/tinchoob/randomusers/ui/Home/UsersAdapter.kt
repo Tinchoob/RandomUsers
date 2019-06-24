@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.item_list_content.view.*
 
 
 class UsersAdapter(
-    private val parentActivity: ItemListActivity,
+    private val parentActivity: UserListActivity,
     private var values: MutableList<Result>?,
     private val twoPane: Boolean,
     private val userSelectedListener : OnUserSelectedListener
