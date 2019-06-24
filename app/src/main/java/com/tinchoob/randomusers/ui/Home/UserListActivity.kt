@@ -2,6 +2,7 @@ package com.tinchoob.randomusers.ui.Home
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.tinchoob.randomusers.R
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.item_list.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import com.tinchoob.randomusers.utils.Constants.Companion.SAVED_USERS
 
 
 class UserListActivity : AppCompatActivity(), UserListContract.View, OnUserSelectedListener {
@@ -29,28 +31,6 @@ class UserListActivity : AppCompatActivity(), UserListContract.View, OnUserSelec
     override lateinit var presenter: UserListContract.Presenter
     private var twoPane: Boolean = false
     private var loading: Boolean = false
-
-    override fun onUserSelected(item: Result) {
-        if (twoPane) {
-            val fragment = UserDetailFragment().apply {
-                arguments = Bundle().apply {
-                    putString(USER_FULL_NAME, item.name?.first)
-                }
-            }
-            this.supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.item_detail_container, fragment)
-                .commit()
-        } else {
-            val intent = Intent(this, UserDetailActivity::class.java).apply {
-                putExtra(USER_FULL_NAME, String.format("%s %s", item.name?.last, item.name?.first))
-                putExtra(USER_IMAGE, item.picture?.large)
-                putExtra(USER_EMAIL, item.email)
-                putExtra(USER_USERNAME, item.login?.username)
-            }
-            startActivity(intent)
-        }
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,21 +46,58 @@ class UserListActivity : AppCompatActivity(), UserListContract.View, OnUserSelec
         if (item_detail_container != null) {
             twoPane = true
         }
+        if (savedInstanceState == null) {
+            presenter.getUsers()
+        } else {
+            val savedUserList = savedInstanceState.getParcelableArrayList<Result>(SAVED_USERS)?.toMutableList()
+            setupRecyclerView(item_list,savedUserList!!)
+        }
+    }
 
-        presenter.getUsers()
 
+    //It is not the best solution because I should not save lot of infomation here but
+    //since I have not implemented a local database it should do the trick
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState.apply {
+            putParcelableArrayList(SAVED_USERS, ArrayList<Result>(mAdapter.getList()))
+        })
+    }
+
+
+    override fun onUserSelected(item: Result) {
+        if (twoPane) {
+            val fragment = UserDetailFragment().apply {
+                arguments = Bundle().apply {
+                    putString(USER_FULL_NAME, item.name?.first)
+                }
+            }
+            this.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.item_detail_container, fragment)
+                .commit()
+        } else {
+            // I was trying to send a Parcelable but some bugs appeared and I need only few user attrs
+            val intent = Intent(this, UserDetailActivity::class.java).apply {
+                putExtra(USER_FULL_NAME, String.format("%s %s", item.name?.last, item.name?.first))
+                putExtra(USER_IMAGE, item.picture?.large)
+                putExtra(USER_EMAIL, item.email)
+                putExtra(USER_USERNAME, item.login?.username)
+            }
+            startActivity(intent)
+        }
     }
 
 
     override fun setUsers(user: User) {
 
-        setupRecyclerView(item_list, user)
+        setupRecyclerView(item_list, user.results!!)
     }
 
-    override fun setupRecyclerView(recyclerView: RecyclerView, user: User) {
+    override fun setupRecyclerView(recyclerView: RecyclerView, result: MutableList<Result>) {
+
         mAdapter = UsersAdapter(
             this,
-            user.results,
+            result,
             twoPane,
             this
         )

@@ -1,8 +1,11 @@
 package com.tinchoob.randomusers.data.model
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
+import kotlinx.android.parcel.Parcelize
 
-class Result {
+@Parcelize
+class Result : Parcelable {
 
     @Json(name = "gender")
     var gender: String? = null

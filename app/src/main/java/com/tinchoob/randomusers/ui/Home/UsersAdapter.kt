@@ -49,6 +49,9 @@ class UsersAdapter(
         notifyDataSetChanged()
     }
 
+    fun getList() = values!!
+
+
     override fun getItemCount() = values!!.size
 
     inner class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {

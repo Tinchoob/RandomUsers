@@ -1,6 +1,7 @@
 package com.tinchoob.randomusers.ui.Home
 
 import androidx.recyclerview.widget.RecyclerView
+import com.tinchoob.randomusers.data.model.Result
 import com.tinchoob.randomusers.data.model.User
 import com.tinchoob.randomusers.ui.BasePresenter
 import com.tinchoob.randomusers.ui.BaseView
@@ -14,7 +15,7 @@ interface UserListContract {
         fun showErrorFetchingUsers()
         fun showProgressView()
         fun hideProgressView()
-        fun setupRecyclerView(recyclerView: RecyclerView, user: User)
+        fun setupRecyclerView(recyclerView: RecyclerView, result: MutableList<Result>)
     }
 
     interface Presenter : BasePresenter {
