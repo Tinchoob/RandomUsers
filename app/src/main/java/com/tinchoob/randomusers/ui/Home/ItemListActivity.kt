@@ -2,6 +2,7 @@ package com.tinchoob.randomusers.ui.Home
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.tinchoob.randomusers.R
 import com.tinchoob.randomusers.data.RandomUsersRepository
@@ -9,6 +10,10 @@ import com.tinchoob.randomusers.data.model.Result
 import com.tinchoob.randomusers.data.model.User
 import com.tinchoob.randomusers.ui.UserDetail.ItemDetailActivity
 import com.tinchoob.randomusers.ui.UserDetail.ItemDetailFragment
+import com.tinchoob.randomusers.utils.Constants.Companion.USER_EMAIL
+import com.tinchoob.randomusers.utils.Constants.Companion.USER_FULL_NAME
+import com.tinchoob.randomusers.utils.Constants.Companion.USER_IMAGE
+import com.tinchoob.randomusers.utils.Constants.Companion.USER_USERNAME
 
 import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list.*
@@ -23,11 +28,11 @@ import kotlinx.android.synthetic.main.item_list.*
  */
 class ItemListActivity : AppCompatActivity(), UserListContract.View,OnUserSelectedListener {
 
-    override fun OnUserSelected(item: Result){
+    override fun onUserSelected(item: Result){
         if (twoPane) {
             val fragment = ItemDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ItemDetailFragment.USER_FULL_NAME, item.name?.first)
+                    putString(USER_FULL_NAME, item.name?.first)
                 }
             }
             this.supportFragmentManager
@@ -36,10 +41,10 @@ class ItemListActivity : AppCompatActivity(), UserListContract.View,OnUserSelect
                 .commit()
         } else {
             val intent = Intent(this, ItemDetailActivity::class.java).apply {
-                putExtra(ItemDetailFragment.USER_FULL_NAME, String.format("%s %s",item.name?.last,item.name?.first))
-                putExtra(ItemDetailFragment.USER_IMAGE,item.picture?.large)
-                putExtra(ItemDetailFragment.USER_EMAIL,item.email)
-                putExtra(ItemDetailFragment.USER_USERNAME,item.login?.username)
+                putExtra(USER_FULL_NAME, String.format("%s %s",item.name?.last,item.name?.first))
+                putExtra(USER_IMAGE,item.picture?.large)
+                putExtra(USER_EMAIL,item.email)
+                putExtra(USER_USERNAME,item.login?.username)
             }
             startActivity(intent)
         }
@@ -88,6 +93,10 @@ class ItemListActivity : AppCompatActivity(), UserListContract.View,OnUserSelect
             twoPane,
             this
         )
+    }
+
+    override fun showError() {
+        Toast.makeText(this,R.string.general_error_message,Toast.LENGTH_SHORT).show()
     }
 
 

@@ -4,5 +4,5 @@ import com.tinchoob.randomusers.data.model.Result
 
 interface OnUserSelectedListener {
 
-    fun OnUserSelected(item: Result)
+    fun onUserSelected(item: Result)
 }

@@ -6,20 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.tinchoob.randomusers.R
+import com.tinchoob.randomusers.utils.Constants.Companion.USER_EMAIL
+import com.tinchoob.randomusers.utils.Constants.Companion.USER_FULL_NAME
+import com.tinchoob.randomusers.utils.Constants.Companion.USER_USERNAME
 import kotlinx.android.synthetic.main.item_detail.view.*
 
-/**
- * A fragment representing a single Item detail screen.
- * This fragment is either contained in a [ItemListActivity]
- * in two-pane mode (on tablets) or a [ItemDetailActivity]
- * on handsets.
- */
+
 class ItemDetailFragment : Fragment(),UserDetailContract.View {
 
     override lateinit var presenter: UserDetailContract.Presenter
-    lateinit var userName : String
-    lateinit var fullName : String
-    lateinit var userEmail : String
+    private lateinit var userName : String
+    private lateinit var fullName : String
+    private lateinit var userEmail : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,14 +49,4 @@ class ItemDetailFragment : Fragment(),UserDetailContract.View {
         return rootView
     }
 
-    companion object {
-        /**
-         * The fragment argument representing the item ID that this fragment
-         * represents.
-         */
-        const val USER_EMAIL = "user_email"
-        const val USER_FULL_NAME = "user_full_name"
-        const val USER_USERNAME = "user_username"
-        const val USER_IMAGE = "image_path"
-    }
 }

@@ -9,7 +9,10 @@ import com.tinchoob.randomusers.R
 import com.tinchoob.randomusers.ui.Home.ItemListActivity
 import kotlinx.android.synthetic.main.activity_item_detail.*
 import com.bumptech.glide.request.RequestOptions
-
+import com.tinchoob.randomusers.utils.Constants.Companion.USER_EMAIL
+import com.tinchoob.randomusers.utils.Constants.Companion.USER_FULL_NAME
+import com.tinchoob.randomusers.utils.Constants.Companion.USER_IMAGE
+import com.tinchoob.randomusers.utils.Constants.Companion.USER_USERNAME
 
 
 /**
@@ -33,26 +36,17 @@ class ItemDetailActivity : AppCompatActivity() {
         // Show the Up button in the action bar.
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // savedInstanceState is non-null when there is fragment state
-        // saved from previous configurations of this activity
-        // (e.g. when rotating the screen from portrait to landscape).
-        // In this case, the fragment will automatically be re-added
-        // to its container so we don't need to manually add it.
-        // For more information, see the Fragments API guide at:
-        //
-        // http://developer.android.com/guide/components/fragments.html
-        //
+
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
+
             val fragment = ItemDetailFragment().apply {
                 arguments = Bundle().apply {
                     putString(
-                        ItemDetailFragment.USER_FULL_NAME,
-                        intent.getStringExtra(ItemDetailFragment.USER_FULL_NAME)
+                        USER_FULL_NAME,
+                        intent.getStringExtra(USER_FULL_NAME)
                     )
-                    putString(ItemDetailFragment.USER_EMAIL,intent.getStringExtra(ItemDetailFragment.USER_EMAIL))
-                    putString(ItemDetailFragment.USER_USERNAME,intent.getStringExtra(ItemDetailFragment.USER_USERNAME))
+                    putString(USER_EMAIL,intent.getStringExtra(USER_EMAIL))
+                    putString(USER_USERNAME,intent.getStringExtra(USER_USERNAME))
                 }
             }
 
@@ -60,7 +54,7 @@ class ItemDetailActivity : AppCompatActivity() {
             options.fitCenter()
 
             Glide.with(this)
-                .load(intent.getStringExtra(ItemDetailFragment.USER_IMAGE))
+                .load(intent.getStringExtra(USER_IMAGE))
                 .apply(options)
                 .into(user_image)
 

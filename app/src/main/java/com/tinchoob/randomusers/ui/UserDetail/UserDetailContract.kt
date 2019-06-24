@@ -5,12 +5,8 @@ import com.tinchoob.randomusers.ui.BaseView
 
 interface UserDetailContract {
 
-    interface View : BaseView<Presenter> {
+    interface View : BaseView<Presenter>
 
-    }
-
-    interface Presenter : BasePresenter {
-
-    }
+    interface Presenter : BasePresenter
 
 }

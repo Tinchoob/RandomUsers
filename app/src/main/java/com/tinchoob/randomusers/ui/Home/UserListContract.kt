@@ -8,6 +8,7 @@ interface UserListContract {
 
     interface View : BaseView<Presenter> {
         fun setUsers(user : User)
+        fun showError()
     }
 
     interface Presenter : BasePresenter {
