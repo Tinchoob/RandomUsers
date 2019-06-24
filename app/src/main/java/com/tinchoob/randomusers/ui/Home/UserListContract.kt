@@ -11,6 +11,8 @@ interface UserListContract {
         fun showError()
         fun newUsersReceived(user: User)
         fun showErrorFetchingUsers()
+        fun showProgressView()
+        fun hideProgressView()
     }
 
     interface Presenter : BasePresenter {

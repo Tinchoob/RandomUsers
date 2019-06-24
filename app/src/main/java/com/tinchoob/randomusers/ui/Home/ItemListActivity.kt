@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.view.View
 
 
 class ItemListActivity : AppCompatActivity(), UserListContract.View, OnUserSelectedListener {
@@ -101,6 +102,7 @@ class ItemListActivity : AppCompatActivity(), UserListContract.View, OnUserSelec
                         mLayoutManager.itemCount <= mLayoutManager.findLastVisibleItemPosition() + 2
 
                     if (!loading && shouldLoadMoreUsers) {
+                        showProgressView()
                         loading = true
                         presenter.fetchNewUsers()
                     }
@@ -116,13 +118,22 @@ class ItemListActivity : AppCompatActivity(), UserListContract.View, OnUserSelec
 
     override fun showErrorFetchingUsers() {
         loading = false
+        hideProgressView()
         Toast.makeText(this, R.string.general_error_message, Toast.LENGTH_SHORT).show()
     }
 
     override fun newUsersReceived(user: User) {
         loading = false
+        hideProgressView()
         mAdapter.addMoreUsers(user.results!!)
     }
 
+    override fun showProgressView() {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressView() {
+        progressBar.visibility = View.INVISIBLE
+    }
 
 }
