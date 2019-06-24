@@ -37,14 +37,6 @@ class UserDetailActivity : AppCompatActivity() {
                 }
             }
 
-            val options = RequestOptions()
-            options.fitCenter()
-
-            Glide.with(this)
-                .load(intent.getStringExtra(USER_IMAGE))
-                .apply(options)
-                .into(user_image)
-
 
             supportActionBar?.setDisplayShowTitleEnabled(false)
 
@@ -54,6 +46,19 @@ class UserDetailActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val options = RequestOptions()
+        options.fitCenter()
+
+
+        Glide.with(this)
+            .load(intent.getStringExtra(USER_IMAGE))
+            .apply(options)
+            .into(user_image)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =
